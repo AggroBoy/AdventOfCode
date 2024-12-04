@@ -38,12 +38,12 @@ fun List<List<Char>>.countXmasStartingAtPos(x: Int, y: Int): Int {
     return count
 }
 
-fun List<List<Char>>.letterAt(x: Int, y: Int): Char {
+fun List<List<Char>>.letterAt(x: Int, y: Int): Char? {
     if (y < 0 || y >= this.size) {
-        return ' '
+        return null
     }
     if (x < 0 || x >= this[y].size) {
-        return ' '
+        return null
     }
     return this[y][x]
 }
