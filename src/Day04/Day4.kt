@@ -20,6 +20,14 @@ fun puzzle1(fileName: String): Int {
     }.sum()
 }
 
+fun puzzle2(filename: String): Int {
+    val grid = loadGrid(filename)
+
+    return grid.flatMapIndexed { y, row ->
+        row.indices.map { x -> grid.isXMasCentredAt(x, y) }
+    }.count { it }
+}
+
 fun List<List<Char>>.countXmasStartingAtPos(x: Int, y: Int): Int {
     if (this[y][x] != 'X') {
         return 0
@@ -38,24 +46,6 @@ fun List<List<Char>>.countXmasStartingAtPos(x: Int, y: Int): Int {
     return count
 }
 
-fun List<List<Char>>.letterAt(x: Int, y: Int): Char? {
-    if (y < 0 || y >= this.size) {
-        return null
-    }
-    if (x < 0 || x >= this[y].size) {
-        return null
-    }
-    return this[y][x]
-}
-
-fun puzzle2(filename: String): Int {
-    val grid = loadGrid(filename)
-
-    return grid.flatMapIndexed { y, row ->
-        row.indices.map { x -> grid.isXMasCentredAt(x, y) }
-    }.count { it }
-}
-
 fun List<List<Char>>.isXMasCentredAt(x: Int, y: Int): Boolean {
     val letters = listOf('M', 'S')
 
@@ -67,6 +57,16 @@ fun List<List<Char>>.isXMasCentredAt(x: Int, y: Int): Boolean {
         letterAt(x-1,y-1) != letterAt(x+1, y+1) &&
         letterAt(x-1,y+1) != letterAt(x+1, y-1)
     )
+}
+
+fun List<List<Char>>.letterAt(x: Int, y: Int): Char? {
+    if (y < 0 || y >= this.size) {
+        return null
+    }
+    if (x < 0 || x >= this[y].size) {
+        return null
+    }
+    return this[y][x]
 }
 
 private fun loadGrid(fileName: String) = File(fileName).readLines().map { line ->
