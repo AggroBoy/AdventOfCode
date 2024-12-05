@@ -3,6 +3,9 @@ package Day05
 import util.printTimedOutput
 import java.io.File
 
+typealias Rule = Pair<Int, Int>
+typealias Manual = List<Int>
+
 fun main() {
     printTimedOutput("Puzzle 1 test") { puzzle1("input/day5-test.txt") }
     printTimedOutput("Puzzle 1     ") { puzzle1("input/day5.txt") }
@@ -11,7 +14,7 @@ fun main() {
 }
 
 fun puzzle1(s: String): Int {
-    val (rules: List<Pair<Int, Int>>, manuals: List<List<Int>>) = loadRulesAndManuals(s)
+    val (rules: List<Rule>, manuals: List<Manual>) = loadRulesAndManuals(s)
 
     return manuals
         .filter { manual -> rules.all { rule -> manual.matches(rule) } }
@@ -20,7 +23,7 @@ fun puzzle1(s: String): Int {
 }
 
 fun puzzle2(s: String): Int {
-    val (rules: List<Pair<Int, Int>>, manuals: List<List<Int>>) = loadRulesAndManuals(s)
+    val (rules: List<Rule>, manuals: List<Manual>) = loadRulesAndManuals(s)
 
      return manuals
         .filter { manual -> rules.any { rule -> !manual.matches(rule) } }
@@ -37,12 +40,12 @@ fun puzzle2(s: String): Int {
         .sum()
 }
 
-fun List<Int>.matches(rule: Pair<Int, Int>) =
+fun Manual.matches(rule: Rule) =
     !this.contains(rule.first) ||
             !this.contains(rule.second) ||
             this.indexOf(rule.first) < this.indexOf(rule.second)
 
-fun loadRulesAndManuals(s: String): Pair<List<Pair<Int, Int>>, List<List<Int>>> {
+fun loadRulesAndManuals(s: String): Pair<List<Rule>, List<Manual>> {
     val lines = File(s).readLines()
 
     val separator = lines.indexOf("")
