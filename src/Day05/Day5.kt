@@ -18,7 +18,7 @@ fun puzzle1(s: String): Int {
 
     return manuals
         .filter { manual -> rules.all { rule -> manual.matches(rule) } }
-        .map { manual -> manual[manual.size / 2] }
+        .map { manual -> manual.middlePage }
         .sum()
 }
 
@@ -36,7 +36,7 @@ fun puzzle2(s: String): Int {
                 }
             }
         }
-        .map { manual -> manual[manual.size / 2] }
+        .map { manual -> manual.middlePage }
         .sum()
 }
 
@@ -44,6 +44,9 @@ fun Manual.matches(rule: Rule) =
     !this.contains(rule.first) ||
             !this.contains(rule.second) ||
             this.indexOf(rule.first) < this.indexOf(rule.second)
+
+val Manual.middlePage
+    get() = this[this.size / 2]
 
 fun loadRulesAndManuals(s: String): Pair<List<Rule>, List<Manual>> {
     val lines = File(s).readLines()
