@@ -13,17 +13,28 @@ fun main() {
 fun puzzle1(s: String): Long {
     val calibrations = loadCalibrations(s)
 
-    return calibrations.filter { calibrationCanMatch(it.first, it.second) }.sumOf { it.first }
-}
-
-fun calibrationCanMatch(target: Long, calibration: List<Long>): Boolean {
     val operations = listOf(
         { a: Long, b: Long -> a * b },
         { a: Long, b: Long -> a + b }
     )
 
-    return recurseCalibrationList(target, calibration.first(), calibration.drop(1), operations)
+    return calibrations.filter { calibrationCanMatch(it.first, it.second, operations) }.sumOf { it.first }
 }
+
+fun puzzle2(s: String): Long {
+    val calibrations = loadCalibrations(s)
+
+    val operations = listOf(
+        { a: Long, b: Long -> a * b },
+        { a: Long, b: Long -> a + b },
+        { a: Long, b: Long -> "$a$b".toLong() }
+    )
+    
+    return calibrations.filter { calibrationCanMatch(it.first, it.second, operations) }.sumOf { it.first }
+}
+
+fun calibrationCanMatch(target: Long, calibration: List<Long>, operations: List<(Long, Long) -> Long>): Boolean =
+    recurseCalibrationList(target, calibration.first(), calibration.drop(1), operations)
 
 fun recurseCalibrationList(target: Long, totalSoFar: Long, remaining: List<Long>, operations: List<(Long, Long) -> Long>): Boolean {
     if (remaining.isEmpty()) {
@@ -35,22 +46,6 @@ fun recurseCalibrationList(target: Long, totalSoFar: Long, remaining: List<Long>
             recurseCalibrationList(target, operation(totalSoFar, remaining.first()), remaining.drop(1), operations)
         }
     }
-}
-
-fun puzzle2(s: String): Long {
-    val calibrations = loadCalibrations(s)
-
-    return calibrations.filter { calibrationCanMatchExtended(it.first, it.second) }.sumOf { it.first }
-}
-
-fun calibrationCanMatchExtended(target: Long, calibration: List<Long>): Boolean {
-    val operations = listOf(
-        { a: Long, b: Long -> a * b },
-        { a: Long, b: Long -> a + b },
-        { a: Long, b: Long -> "$a$b".toLong() }
-    )
-
-    return recurseCalibrationList(target, calibration.first(), calibration.drop(1), operations)
 }
 
 fun loadCalibrations(fileName: String): List<Pair<Long, List<Long>>> {
