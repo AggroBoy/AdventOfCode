@@ -17,17 +17,23 @@ fun puzzle1(s: String): Long {
 }
 
 fun calibrationCanMatch(target: Long, calibration: List<Long>): Boolean {
-    return recurseCalibrationList(target, calibration.first(), calibration.drop(1))
+    val operations = listOf(
+        { a: Long, b: Long -> a * b },
+        { a: Long, b: Long -> a + b }
+    )
+
+    return recurseCalibrationList(target, calibration.first(), calibration.drop(1), operations)
 }
 
-fun recurseCalibrationList(target: Long, totalSoFar: Long, remaining: List<Long>): Boolean {
+fun recurseCalibrationList(target: Long, totalSoFar: Long, remaining: List<Long>, operations: List<(Long, Long) -> Long>): Boolean {
     if (remaining.isEmpty()) {
         return totalSoFar == target
     } else if (totalSoFar > target) {
         return false
     } else {
-        return recurseCalibrationList(target, totalSoFar * remaining.first(), remaining.drop(1)) ||
-                recurseCalibrationList(target, totalSoFar + remaining.first(), remaining.drop(1))
+        return operations.any { operation ->
+            recurseCalibrationList(target, operation(totalSoFar, remaining.first()), remaining.drop(1), operations)
+        }
     }
 }
 
@@ -38,19 +44,13 @@ fun puzzle2(s: String): Long {
 }
 
 fun calibrationCanMatchExtended(target: Long, calibration: List<Long>): Boolean {
-    return recurseCalibrationListExtended(target, calibration.first(), calibration.drop(1))
-}
+    val operations = listOf(
+        { a: Long, b: Long -> a * b },
+        { a: Long, b: Long -> a + b },
+        { a: Long, b: Long -> "$a$b".toLong() }
+    )
 
-fun recurseCalibrationListExtended(target: Long, totalSoFar: Long, remaining: List<Long>): Boolean {
-    if (remaining.isEmpty()) {
-        return totalSoFar == target
-    } else if (totalSoFar > target) {
-        return false
-    } else {
-        return recurseCalibrationListExtended(target, totalSoFar * remaining.first(), remaining.drop(1)) ||
-                recurseCalibrationListExtended(target, totalSoFar + remaining.first(), remaining.drop(1)) ||
-                recurseCalibrationListExtended(target, "${totalSoFar}${remaining.first()}".toLong(), remaining.drop(1))
-    }
+    return recurseCalibrationList(target, calibration.first(), calibration.drop(1), operations)
 }
 
 fun loadCalibrations(fileName: String): List<Pair<Long, List<Long>>> {
