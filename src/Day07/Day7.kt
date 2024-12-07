@@ -10,31 +10,32 @@ fun main() {
     printTimedOutput("Puzzle 2     ") { puzzle2("input/day7.txt") }
 }
 
-fun puzzle1(s: String): Long {
-    val calibrations = loadCalibrations(s)
+fun puzzle1(fileName: String): Long {
+    return testCalibrationWithOperations(
+        fileName, listOf(
+            { a: Long, b: Long -> a * b },
+            { a: Long, b: Long -> a + b }
+        ))
+}
 
-    val operations = listOf(
-        { a: Long, b: Long -> a * b },
-        { a: Long, b: Long -> a + b }
-    )
+fun puzzle2(fileName: String): Long {
+    return testCalibrationWithOperations(
+        fileName, listOf(
+            { a: Long, b: Long -> a * b },
+            { a: Long, b: Long -> a + b },
+            { a: Long, b: Long -> "$a$b".toLong() }
+        ))
+}
+
+fun testCalibrationWithOperations(fileName: String, operations: List<(Long, Long) -> Long>): Long {
+    val calibrations = loadCalibrations(fileName)
 
     return calibrations.filter { calibrationCanMatch(it.first, it.second, operations) }.sumOf { it.first }
 }
 
-fun puzzle2(s: String): Long {
-    val calibrations = loadCalibrations(s)
-
-    val operations = listOf(
-        { a: Long, b: Long -> a * b },
-        { a: Long, b: Long -> a + b },
-        { a: Long, b: Long -> "$a$b".toLong() }
-    )
-    
-    return calibrations.filter { calibrationCanMatch(it.first, it.second, operations) }.sumOf { it.first }
+fun calibrationCanMatch(target: Long, calibration: List<Long>, operations: List<(Long, Long) -> Long>): Boolean {
+    return recurseCalibrationList(target, calibration.first(), calibration.drop(1), operations)
 }
-
-fun calibrationCanMatch(target: Long, calibration: List<Long>, operations: List<(Long, Long) -> Long>): Boolean =
-    recurseCalibrationList(target, calibration.first(), calibration.drop(1), operations)
 
 fun recurseCalibrationList(target: Long, totalSoFar: Long, remaining: List<Long>, operations: List<(Long, Long) -> Long>): Boolean {
     if (remaining.isEmpty()) {
