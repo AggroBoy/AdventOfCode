@@ -1,11 +1,7 @@
 package Day08
 
-import util.printTimedOutput
+import util.*
 import java.io.File
-
-typealias Coord = Pair<Int, Int>
-val Coord.x get() = this.first
-val Coord.y get() = this.second
 
 data class TownMap (val width: Int, val height: Int, val antenna: Map<Char, List<Coord>>)
 
@@ -28,16 +24,58 @@ fun puzzle1(fileName: String): Int {
                     val yDiff = coord.y - otherCoord.y
                     Coord(coord.x + xDiff, coord.y + yDiff)
                 }
-                .filter { antinode ->
-                    antinode.x >= 0 && antinode.x < townMap.width &&
-                            antinode.y >= 0 && antinode.y < townMap.height
-                }
+                .filter { antinode -> townMap.pointWithinBounds(antinode) }
         }
     }.toSet().count()
 }
 
 fun puzzle2(fileName: String): Int {
-    return -1
+    val townMap = loadMap(fileName)
+
+    // Get the pairs of antenna to generate antinodes for
+    val uniqueAntennaPairs = getUniqueAntennaPairs(townMap)
+
+    // Generate the antinodes for each pair of antennas
+    return uniqueAntennaPairs
+        .flatMap { (coord1, coord2) ->
+            // figure out the vector the antinodes will be generated along
+            val vector = Coord(coord1.x - coord2.x, coord1.y - coord2.y)
+
+            val antinodes: MutableList<Coord> = mutableListOf()
+
+            // Walk along the vector in one direction, generating antinodes
+            var pos = coord1.copy()
+            while (townMap.pointWithinBounds(pos)) {
+                antinodes.add(pos.copy())
+                pos -= vector
+            }
+
+            // Walk along the vector in the other direction, generating antinodes
+            pos = coord1.copy() + vector
+            while (townMap.pointWithinBounds(pos)) {
+                antinodes.add(pos.copy())
+                pos += vector
+            }
+
+            antinodes
+        }.toSet().size
+}
+
+// Figure out all the pairs of antennas that will generate resonant frequencies (ie, each unique pair of antennas that
+// share a frequency)
+private fun getUniqueAntennaPairs(townMap: TownMap): Set<Pair<Coord, Coord>> {
+    return townMap.antenna.flatMap { (c, coords) ->
+        coords.flatMap { coord ->
+            coords.filter { it != coord }.map { otherCoord ->
+                // Have to sort the pair of antennas otherwise we'll get duplicates due to the order of the antennas
+                // in the pair
+                if (coord.x < otherCoord.x || coord.x == otherCoord.x && coord.y < otherCoord.y)
+                    Pair(coord, otherCoord)
+                else
+                    Pair(otherCoord, coord)
+            }
+        }
+    }.toSet()
 }
 
 fun loadMap(fileName: String): TownMap {
@@ -59,3 +97,6 @@ fun loadMap(fileName: String): TownMap {
 
     return TownMap(width, height, antenna)
 }
+
+fun TownMap.pointWithinBounds(coord: Coord): Boolean =
+    coord.x >= 0 && coord.x < width && coord.y >= 0 && coord.y < height
