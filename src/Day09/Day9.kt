@@ -66,7 +66,7 @@ fun puzzle2(fileName: String): Long {
         }
     }
 
-    return fs.flatMap { file -> List(file.length) { file.fileId } }.toMutableList().checksum()
+    return fs.flatMap { file -> List(file.length) { file.fileId } }.checksum()
 }
 
 private fun loadTableFilesystem(fileName: String) = File(fileName).readLines()[0].mapIndexed { index, it ->
@@ -79,7 +79,7 @@ private fun loadTableFilesystem(fileName: String) = File(fileName).readLines()[0
     }
 }.toMutableList()
 
-fun MutableList<Long?>.checksum(): Long {
+fun List<Long?>.checksum(): Long {
     return this.mapIndexed { pos, fileId ->
         when (fileId) {
             null -> 0
