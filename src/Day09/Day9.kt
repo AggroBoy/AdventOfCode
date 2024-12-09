@@ -13,16 +13,22 @@ fun main() {
 fun puzzle1(fileName: String): Long {
     val fs = loadBlockFilesystem(fileName)
 
-    var firstSpace = fs.indexOfFirst { it == null }
-    var lastFileChunk = fs.indexOfLast { it != null }
-    while (firstSpace < lastFileChunk) {
-        fs[firstSpace] = fs[lastFileChunk]
-        fs[lastFileChunk] = null
-        firstSpace = fs.indexOfFirst { it == null }
-        lastFileChunk = fs.indexOfLast { it != null }
+    var beginPtr = 0
+    var endPtr = fs.indexOfLast { it != null }
+    val output = mutableListOf<Long?>()
+
+    while (beginPtr <= endPtr) {
+        if( fs[beginPtr] != null ) {
+            output.add(fs[beginPtr])
+            beginPtr++
+        } else {
+            output.add(fs[endPtr])
+            beginPtr++
+            do endPtr-- while (fs[endPtr] == null)
+        }
     }
 
-    return fs.checksum()
+    return output.checksum()
 }
 
 private fun loadBlockFilesystem(fileName: String): MutableList<Long?> {
