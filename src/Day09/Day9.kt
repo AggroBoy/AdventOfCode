@@ -69,15 +69,17 @@ fun puzzle2(fileName: String): Long {
     return fs.flatMap { file -> List(file.length) { file.fileId } }.checksum()
 }
 
-private fun loadTableFilesystem(fileName: String) = File(fileName).readLines()[0].mapIndexed { index, it ->
-    val length = it.toString().toInt()
-    if (index % 2 == 0) {
-        val fileId = index / 2
-        FsFile(fileId.toLong(), length)
-    } else {
-        FsFile(null, length)
-    }
-}.toMutableList()
+private fun loadTableFilesystem(fileName: String): MutableList<FsFile> {
+    return File(fileName).readLines()[0].mapIndexed { index, it ->
+        val length = it.toString().toInt()
+        if (index % 2 == 0) {
+            val fileId = index / 2
+            FsFile(fileId.toLong(), length)
+        } else {
+            FsFile(null, length)
+        }
+    }.toMutableList()
+}
 
 fun List<Long?>.checksum(): Long {
     return this.mapIndexed { pos, fileId ->
