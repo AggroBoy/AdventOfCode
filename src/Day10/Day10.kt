@@ -33,8 +33,8 @@ fun puzzle2(fileName: String): Int {
     return findAndScoreTrailheads(topoMap) { map, coord -> getTrailHeadRating(map, coord) }
 }
 
-private fun findAndScoreTrailheads(map: TopoMap, trailheadScore: (TopoMap, Coord) -> Int) = map.indices.flatMapIndexed { y, _ ->
-    map[y].indices.mapIndexed { x, _ ->
+private fun findAndScoreTrailheads(map: TopoMap, trailheadScore: (TopoMap, Coord) -> Int) = map.indices.flatMap { y ->
+    map[y].indices.map { x ->
         if (map.get(x, y) == 0) {
             trailheadScore(map, Coord(x, y))
         } else
