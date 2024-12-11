@@ -19,9 +19,8 @@ fun puzzle(fileName: String, blinks: Int): Long {
 }
 
 fun getFinalStoneCountForStone(stone: Long, blinks: Int): Long {
-    cache[stone to blinks]?.let { return it }
-
     if (blinks == 0) return 1
+    cache[stone to blinks]?.let { return it }
 
     val stoneString = stone.toString()
     return when {
