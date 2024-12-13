@@ -22,7 +22,7 @@ data class Machine(
         get() = 1
 }
 
-fun puzzle1(fileName: String): Int {
+fun puzzle1(fileName: String): Long {
     val machines = loadMachines(fileName)
 
     return machines.mapNotNull { machine ->

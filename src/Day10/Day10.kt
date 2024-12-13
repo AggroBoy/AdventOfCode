@@ -5,9 +5,9 @@ import java.io.File
 
 typealias TopoMap = List<List<Int>>
 fun TopoMap.get(coord: Coord): Int = this.get(coord.x, coord.y)
-fun TopoMap.get(x: Int, y: Int): Int {
+fun TopoMap.get(x: Long, y: Long): Int {
     try {
-        return this[y][x]
+        return this[y.toInt()][x.toInt()]
     } catch (e: IndexOutOfBoundsException) {
         // doesn't need to be an error; just make sure it doesn't route
         return -1
@@ -35,7 +35,7 @@ fun puzzle2(fileName: String): Int {
 
 private fun findAndScoreTrailheads(map: TopoMap, trailheadScore: (TopoMap, Coord) -> Int) = map.indices.flatMap { y ->
     map[y].indices.map { x ->
-        if (map.get(x, y) == 0) {
+        if (map.get(Coord(x, y)) == 0) {
             trailheadScore(map, Coord(x, y))
         } else
             0

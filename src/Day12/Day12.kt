@@ -4,7 +4,7 @@ import util.*
 import java.io.File
 
 typealias GeoMap = List<List<Char>>
-fun GeoMap.get(coord: Coord): Char = try { this[coord.y][coord.x] } catch (e: IndexOutOfBoundsException) { ' ' }
+fun GeoMap.get(coord: Coord): Char = try { this[coord.y.toInt()][coord.x.toInt()] } catch (e: IndexOutOfBoundsException) { ' ' }
 
 fun main() {
     printTimedOutput("Puzzle 1 test") { puzzle1("input/day12-test.txt") }
@@ -54,7 +54,7 @@ fun puzzle2(fileName: String): Int {
         }
     }.filter { it.area != 0 }
 
-    fun countSides(edges: List<Int>): Int {
+    fun countSides(edges: List<Long>): Int {
         return edges.indices.map { index ->
             when {
                 index == 0 -> 1
