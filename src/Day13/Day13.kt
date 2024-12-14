@@ -2,13 +2,17 @@ package Day13
 
 import util.*
 import java.io.File
+import java.lang.StrictMath.pow
+import kotlin.math.cos
 import kotlin.math.min
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 fun main() {
     printTimedOutput("Puzzle 1 test") { puzzle1("input/day13-test.txt") }
     printTimedOutput("Puzzle 1     ") { puzzle1("input/day13.txt") }
-//    printTimedOutput("Puzzle 2 test") { puzzle2("input/day13-test.txt") }
-//    printTimedOutput("Puzzle 2     ") { puzzle2("input/day13.txt") }
+    printTimedOutput("Puzzle 2 test") { puzzle2("input/day13-test.txt") }
+    printTimedOutput("Puzzle 2     ") { puzzle2("input/day13.txt") }
 }
 
 data class Machine(
@@ -40,8 +44,22 @@ fun puzzle1(fileName: String): Long {
     }.sum()
 }
 
-fun puzzle2(fileName: String): Int {
-    return -1
+fun puzzle2(fileName: String): Long {
+    // Had to look up the solution - didn't have the maths to solve this one
+    // I didn't even reccognise that I was looking at a simultaneous equation, and I'd
+    // definitely never heard of Cramer's Rule
+    val machines = loadMachines(fileName).map { it.copy(prizeLocation = it.prizeLocation + Coord(10000000000000L, 10000000000000L)) }
+
+    return machines.mapNotNull { machine ->
+        val det = machine.buttonA.x * machine.buttonB.y - machine.buttonA.y * machine.buttonB.x
+        val a = (machine.prizeLocation.x * machine.buttonB.y - machine.prizeLocation.y * machine.buttonB.x) / det
+        val b = (machine.buttonA.x * machine.prizeLocation.y - machine.buttonA.y * machine.prizeLocation.x) / det
+        if (machine.buttonA.x * a + machine.buttonB.x * b == machine.prizeLocation.x && machine.buttonA.y * a + machine.buttonB.y * b == machine.prizeLocation.y) {
+            machine.buttonACost * a + machine.buttonBCost * b
+        } else {
+            null
+        }
+    }.sum()
 }
 
 fun loadMachines(fileName: String): List<Machine> {
