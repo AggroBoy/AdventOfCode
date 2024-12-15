@@ -10,3 +10,7 @@ fun <T>printTimedOutput(title: String, lambda: () -> T) {
     val result = lambda()
     println("%-20s %10s".format("$title : $result", "(${timeStamp.elapsedNow().inWholeMilliseconds}ms)"))
 }
+
+fun Int.times(lambda: () -> Unit) {
+    (0 until this).forEach { lambda() }
+}
