@@ -11,13 +11,6 @@ fun main() {
 }
 
 
-enum class Direction(val coord: Coord) {
-    UP(Coord(0, -1)),
-    DOWN(Coord(0, 1)),
-    LEFT(Coord(-1, 0)),
-    RIGHT(Coord(1, 0))
-}
-
 data class Box(var locations: List<Coord>) {
     val gps get() = locations.map{ it.x }.min() + (100 * locations.map{ it.y }.min())
     fun renderLocation(location: Coord): Char {
