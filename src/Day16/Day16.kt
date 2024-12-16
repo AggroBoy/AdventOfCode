@@ -8,8 +8,8 @@ import java.io.File
 fun main() {
     printTimedOutput("Puzzle 1 test") { puzzle1("input/day16-test.txt") }
     printTimedOutput("Puzzle 1     ") { puzzle1("input/day16.txt") }
-//    printTimedOutput("Puzzle 2 test") { puzzle2("input/day16-test.txt") }
-//    printTimedOutput("Puzzle 2     ") { puzzle2("input/day16.txt") }
+    printTimedOutput("Puzzle 2 test") { puzzle2("input/day16-test.txt") }
+    printTimedOutput("Puzzle 2     ") { puzzle2("input/day16.txt") }
 }
 
 data class Reindeer(val location: Coord, val facing: Direction)
@@ -24,24 +24,35 @@ fun puzzle1(fileName: String): Long {
 
     bestScoreSoFar = Long.MAX_VALUE
     bestScoreForSquare = Array(maze.size) { Array(maze[0].size) { Long.MAX_VALUE } }
-    return walkMaze(maze, reindeer) ?: -1
+    return walkMaze(maze, reindeer)?.first ?: -1
 }
 
+
+fun puzzle2(fileName: String): Int {
+    val (maze, startPosition) = loadMazeAndStartPosition(fileName)
+    val reindeer = Reindeer(startPosition, Direction.RIGHT)
+
+    bestScoreSoFar = Long.MAX_VALUE
+    bestScoreForSquare = Array(maze.size) { Array(maze[0].size) { Long.MAX_VALUE } }
+    val uniqueLocations = walkMaze(maze, reindeer)?.second?.toSet() ?: return -1
+    return uniqueLocations.size
+}
 
 fun walkMaze(
     maze: Array<Array<LocationType>>,
     reindeer: Reindeer,
     visitedLocations: List<Reindeer> = emptyList(),
     score: Long = 0L
-): Long? {
-    if (score >= bestScoreSoFar || score >= bestScoreForSquare[reindeer.location.y.toInt()][reindeer.location.x.toInt()]) {
+): Pair<Long, List<Coord>>? {
+    if (score > bestScoreSoFar || score -1000 > bestScoreForSquare[reindeer.location.y.toInt()][reindeer.location.x.toInt()]) {
         return null
     } else {
         bestScoreForSquare[reindeer.location.y.toInt()][reindeer.location.x.toInt()] = score
     }
 
     if (maze[reindeer.location.y.toInt()][reindeer.location.x.toInt()] == LocationType.END) {
-        return score.also { bestScoreSoFar = it }
+        bestScoreSoFar = score
+        return score to visitedLocations.map { it.location } + reindeer.location
     }
 
     val potentials = listOf(
@@ -57,9 +68,12 @@ fun walkMaze(
         return null
     }
 
-    return potentials.map { (addScore, newReindeer) ->
+    val results = potentials.map { (addScore, newReindeer) ->
         walkMaze(maze, newReindeer, visitedLocations + reindeer, score + addScore)
-    }.filterNotNull().minOrNull()
+    }.filterNotNull()
+    val minScore = results.minByOrNull { it.first }?.first ?: return null
+
+    return minScore to results.filter { it.first == minScore }.map { it.second }.reduce { acc, locations -> acc + locations }
 }
 
 fun loadMazeAndStartPosition(fileName: String): Pair<Array<Array<LocationType>>, Coord> {
@@ -79,8 +93,4 @@ fun loadMazeAndStartPosition(fileName: String): Pair<Array<Array<LocationType>>,
     }
 
     return tempMaze to startPosition
-}
-
-fun puzzle2(fileNamne: String): Int {
-    return -1
 }
