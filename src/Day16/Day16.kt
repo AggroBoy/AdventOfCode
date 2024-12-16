@@ -17,6 +17,7 @@ enum class LocationType { WALL, OPEN, START, END}
 
 var bestScoreSoFar = Long.MAX_VALUE
 var bestScoreForReindeerState: MutableMap<Reindeer, Long> = mutableMapOf()
+var totalScoreForReindeerState: MutableMap<Reindeer, Long> = mutableMapOf()
 
 typealias Maze = Array<Array<LocationType>>
 fun Maze.get(location: Coord) = this[location.y.toInt()][location.x.toInt()]
@@ -28,6 +29,7 @@ fun puzzle1(fileName: String): Long {
 
     bestScoreSoFar = Long.MAX_VALUE
     bestScoreForReindeerState = mutableMapOf()
+    totalScoreForReindeerState = mutableMapOf()
     return walkMaze(maze, reindeer)?.first ?: -1
 }
 
@@ -37,6 +39,7 @@ fun puzzle2(fileName: String): Int {
 
     bestScoreSoFar = Long.MAX_VALUE
     bestScoreForReindeerState = mutableMapOf()
+    totalScoreForReindeerState = mutableMapOf()
     val uniqueLocations = walkMaze(maze, reindeer)?.second?.toSet() ?: return -1
     return uniqueLocations.size
 }
@@ -47,17 +50,26 @@ fun walkMaze(
     visitedLocations: List<Reindeer> = emptyList(),
     score: Long = 0L
 ): Pair<Long, List<Coord>>? {
-    if (score > bestScoreSoFar || score > (bestScoreForReindeerState[reindeer] ?: Long.MAX_VALUE)) {
+    // Can we prune (or return a cached total score) based on the current location and score?
+    val bestScoreForReindeer = bestScoreForReindeerState[reindeer] ?: Long.MAX_VALUE
+    if (score > bestScoreSoFar || score > bestScoreForReindeer) {
         return null
+    } else if (score == bestScoreForReindeer) {
+        totalScoreForReindeerState[reindeer]?.let { return it to visitedLocations.map { it.location } }
     } else {
         bestScoreForReindeerState[reindeer] = score
     }
 
-    if (maze[reindeer.location.y.toInt()][reindeer.location.x.toInt()] == LocationType.END) {
+    // Have we won?
+    if (maze.get(reindeer.location) == LocationType.END) {
+        // update pruning and caching info
         bestScoreSoFar = score
+        visitedLocations.forEach { totalScoreForReindeerState[it] = score }
+
         return score to visitedLocations.map { it.location } + reindeer.location
     }
 
+    // Potential moves from here
     val potentials = listOf(
         1 to reindeer.copy(location = reindeer.location + reindeer.facing.coord),
         1001 to reindeer.copy(location = reindeer.location + reindeer.facing.turnRight().coord, facing = reindeer.facing.turnRight()),
@@ -66,10 +78,7 @@ fun walkMaze(
         visitedLocations.none{ it.location == newReindeer.location} && maze.get(newReindeer.location) != LocationType.WALL
     }
 
-    if (potentials.isEmpty()) {
-        return null
-    }
-
+    // Make the permitted moves and figure out the best score and location list
     val results = potentials.map { (addScore, newReindeer) ->
         walkMaze(maze, newReindeer, visitedLocations + reindeer, score + addScore)
     }.filterNotNull()
