@@ -37,8 +37,8 @@ fun puzzle1(fileName: String, roomSize: Coord): Int {
 
 fun Coord.wrappingAdd(other: Coord, roomSize: Coord): Coord {
     var newCoord = Coord((this.x + other.x) % roomSize.x, (this.y + other.y) % roomSize.y)
-    if (newCoord.x < 0) newCoord = newCoord.copy(first = roomSize.x + newCoord.x)
-    if (newCoord.y < 0) newCoord = newCoord.copy(second = roomSize.y + newCoord.y)
+    if (newCoord.x < 0) newCoord = newCoord.copy(x = roomSize.x + newCoord.x)
+    if (newCoord.y < 0) newCoord = newCoord.copy(y = roomSize.y + newCoord.y)
     return newCoord
 }
 
