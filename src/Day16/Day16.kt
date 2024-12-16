@@ -16,38 +16,41 @@ data class Reindeer(val location: Coord, val facing: Direction)
 enum class LocationType { WALL, OPEN, START, END}
 
 var bestScoreSoFar = Long.MAX_VALUE
-var bestScoreForSquare: Array<Array<Long>> = emptyArray()
+var bestScoreForReindeerState: MutableMap<Reindeer, Long> = mutableMapOf()
+
+typealias Maze = Array<Array<LocationType>>
+fun Maze.get(location: Coord) = this[location.y.toInt()][location.x.toInt()]
+
 
 fun puzzle1(fileName: String): Long {
     val (maze, startPosition) = loadMazeAndStartPosition(fileName)
     val reindeer = Reindeer(startPosition, Direction.RIGHT)
 
     bestScoreSoFar = Long.MAX_VALUE
-    bestScoreForSquare = Array(maze.size) { Array(maze[0].size) { Long.MAX_VALUE } }
+    bestScoreForReindeerState = mutableMapOf()
     return walkMaze(maze, reindeer)?.first ?: -1
 }
-
 
 fun puzzle2(fileName: String): Int {
     val (maze, startPosition) = loadMazeAndStartPosition(fileName)
     val reindeer = Reindeer(startPosition, Direction.RIGHT)
 
     bestScoreSoFar = Long.MAX_VALUE
-    bestScoreForSquare = Array(maze.size) { Array(maze[0].size) { Long.MAX_VALUE } }
+    bestScoreForReindeerState = mutableMapOf()
     val uniqueLocations = walkMaze(maze, reindeer)?.second?.toSet() ?: return -1
     return uniqueLocations.size
 }
 
 fun walkMaze(
-    maze: Array<Array<LocationType>>,
+    maze: Maze,
     reindeer: Reindeer,
     visitedLocations: List<Reindeer> = emptyList(),
     score: Long = 0L
 ): Pair<Long, List<Coord>>? {
-    if (score > bestScoreSoFar || score -1000 > bestScoreForSquare[reindeer.location.y.toInt()][reindeer.location.x.toInt()]) {
+    if (score > bestScoreSoFar || score > (bestScoreForReindeerState[reindeer] ?: Long.MAX_VALUE)) {
         return null
     } else {
-        bestScoreForSquare[reindeer.location.y.toInt()][reindeer.location.x.toInt()] = score
+        bestScoreForReindeerState[reindeer] = score
     }
 
     if (maze[reindeer.location.y.toInt()][reindeer.location.x.toInt()] == LocationType.END) {
@@ -60,8 +63,7 @@ fun walkMaze(
         1001 to reindeer.copy(location = reindeer.location + reindeer.facing.turnRight().coord, facing = reindeer.facing.turnRight()),
         1001 to reindeer.copy(location = reindeer.location + reindeer.facing.turnLeft().coord, facing = reindeer.facing.turnLeft())
     ).filter { (_, newReindeer) ->
-        visitedLocations.none{ it.location == newReindeer.location}
-                && maze[newReindeer.location.y.toInt()][newReindeer.location.x.toInt()] != LocationType.WALL
+        visitedLocations.none{ it.location == newReindeer.location} && maze.get(newReindeer.location) != LocationType.WALL
     }
 
     if (potentials.isEmpty()) {
@@ -76,10 +78,10 @@ fun walkMaze(
     return minScore to results.filter { it.first == minScore }.map { it.second }.reduce { acc, locations -> acc + locations }
 }
 
-fun loadMazeAndStartPosition(fileName: String): Pair<Array<Array<LocationType>>, Coord> {
+fun loadMazeAndStartPosition(fileName: String): Pair<Maze, Coord> {
     val lines = File(fileName).readLines()
 
-    val tempMaze = Array(lines.size) { Array(lines[0].length) { LocationType.OPEN } }
+    val tempMaze = Maze(lines.size) { Array(lines[0].length) { LocationType.OPEN } }
     var startPosition = Coord(0, 0)
 
     lines.forEachIndexed { y, line ->
