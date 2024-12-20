@@ -8,4 +8,6 @@ data class Coord(val x: Long, val y: Long) {
     operator fun minus(other: Coord) = Coord(this.x - other.x, this.y - other.y)
 
     operator fun times(scalar: Long) = Coord(this.x * scalar, this.y * scalar)
+
+    override fun toString() = "$x,$y"
 }
