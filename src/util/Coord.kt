@@ -9,5 +9,7 @@ data class Coord(val x: Long, val y: Long) {
 
     operator fun times(scalar: Long) = Coord(this.x * scalar, this.y * scalar)
 
+    fun manhattanDistanceFrom(other: Coord) = Math.abs(this.x - other.x) + Math.abs(this.y - other.y)
+
     override fun toString() = "$x,$y"
 }
