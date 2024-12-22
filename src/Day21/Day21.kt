@@ -105,7 +105,6 @@ fun puzzle1(fileName: String): Int {
 
         val shortest = candidates.minBy { it.length }
 
-
         line.substring(0, 3).toInt() * shortest.length
     }.sum()
 
