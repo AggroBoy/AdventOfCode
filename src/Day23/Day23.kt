@@ -6,8 +6,8 @@ import java.io.File
 fun main() {
     printTimedOutput("Puzzle 1 test") { puzzle1("input/day23-test.txt") }
     printTimedOutput("Puzzle 1     ") { puzzle1("input/day23.txt") }
-//    printTimedOutput("Puzzle 2 test") { puzzle2("input/day23-test.txt") }
-//    printTimedOutput("Puzzle 2     ") { puzzle2("input/day23.txt") }
+    printTimedOutput("Puzzle 2 test") { puzzle2("input/day23-test.txt") }
+    printTimedOutput("Puzzle 2     ") { puzzle2("input/day23.txt") }
 }
 
 fun puzzle1(fileName: String): Int {
@@ -29,6 +29,24 @@ fun puzzle1(fileName: String): Int {
         .count()
 }
 
-fun puzzle2(fileName: String): Int {
-    return -1
+fun puzzle2(fileName: String): String {
+    val connections = File(fileName).readLines().flatMap { connection ->
+        val (one, two) = connection.split('-')
+        listOf(one to two, two to one)
+    }.groupBy { it.first }.mapValues { it.value.map { it.second }.toSet() }
+
+    val lans = connections.flatMap { (node, value) ->
+        value.filter { it != node }.map { otherNode ->
+                var lan = setOf(node, otherNode)
+                while (true) {
+                    val newMember = connections.entries.find { it.value.containsAll(lan) } ?: break
+                    lan = lan + newMember.key
+                }
+                lan
+            }
+        }.distinct()
+
+    val largestLan = lans.maxBy{ it.size }.sorted().joinToString(",")
+
+    return largestLan
 }
