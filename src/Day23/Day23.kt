@@ -30,21 +30,27 @@ fun puzzle1(fileName: String): Int {
 }
 
 fun puzzle2(fileName: String): String {
-    val connections = File(fileName).readLines().flatMap { connection ->
-        val (one, two) = connection.split('-')
-        listOf(one to two, two to one)
-    }.groupBy { it.first }.mapValues { it.value.map { it.second }.toSet() }
+    val lines = File(fileName).readLines()
 
-    val lans = connections.flatMap { (node, value) ->
-        value.filter { it != node }.map { otherNode ->
-                var lan = setOf(node, otherNode)
-                while (true) {
-                    val newMember = connections.entries.find { it.value.containsAll(lan) } ?: break
-                    lan = lan + newMember.key
-                }
-                lan
-            }
-        }.distinct()
+    val pairs = lines.map { connection ->
+        val (one, two) = connection.split('-')
+        one to two
+    }
+
+    val connections = pairs.flatMap { (one, two) ->
+        listOf(one to two, two to one)
+    }.groupBy { it.first }
+        .mapValues { it.value.map { it.second }.toSet() }
+
+
+    val lans = pairs.map { (node, otherNode) ->
+        var lan = setOf(node, otherNode)
+        while (true) {
+            val newMember = connections.entries.find { it.value.containsAll(lan) } ?: break
+            lan = lan + newMember.key
+        }
+        lan
+    }
 
     val largestLan = lans.maxBy{ it.size }.sorted().joinToString(",")
 
