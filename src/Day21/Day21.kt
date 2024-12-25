@@ -1,5 +1,6 @@
 package Day21
 
+import util.Cache
 import util.Coord
 import util.printTimedOutput
 import util.times
@@ -9,53 +10,53 @@ import kotlin.math.abs
 fun main() {
     printTimedOutput("Puzzle 1 test") { puzzle1("input/day21-test.txt") }
     printTimedOutput("Puzzle 1     ") { puzzle1("input/day21.txt") }
-//    printTimedOutput("Puzzle 2 test") { puzzle2("input/day21-test.txt") }
-//    printTimedOutput("Puzzle 2     ") { puzzle2("input/day21.txt") }
+    printTimedOutput("Puzzle 2 test") { puzzle2("input/day21-test.txt") }
+    printTimedOutput("Puzzle 2     ") { puzzle2("input/day21.txt") }
 }
 
-data class State(
-    val currentKeys: Map<Robot, Char>
-)
-
-abstract class Robot(val controlledBy: ControlRobot? = null) {
+abstract class Robot(var controlledBy: ControlRobot? = null) {
     abstract val keys: Map<Char, Coord>
 
-    open fun movesForButton(currentButton: Char, targetButton: Char): List<String> {
+    var currentButton = 'A'
+
+    open fun movesForButton(targetButton: Char): String {
         val offset = keys[targetButton]!! - keys[currentButton]!!
 
         val xPart = (if (offset.x > 0) ">" else "<").repeat(abs(offset.x).toInt())
         val yPart = (if (offset.y > 0) "^" else "v").repeat(abs(offset.y).toInt())
 
-        if (xPart.isEmpty() && yPart.isEmpty()) {
-            return listOf("A")
-        } else
-        if (yPart.isEmpty()) {
-            return listOf(xPart + "A")
+        val result = if (xPart.isEmpty() && yPart.isEmpty()) {
+             "A"
+        } else if (yPart.isEmpty()) {
+             xPart + "A"
         } else if (xPart.isEmpty()) {
-            return listOf(yPart + "A")
+             yPart + "A"
         } else if (!keys.containsValue(Coord(keys[currentButton]!!.x, keys[targetButton]!!.y))) {
-            return listOf(xPart + yPart + "A")
+             xPart + yPart + "A"
         } else if (!keys.containsValue(Coord(keys[targetButton]!!.x, keys[currentButton]!!.y))) {
-            return listOf(yPart + xPart + "A")
+             yPart + xPart + "A"
+        } else if (offset.x < 0) {
+             xPart + yPart + "A"
+        } else if (offset.y < 0) {
+             yPart + xPart + "A"
+        } else {
+             yPart + xPart + "A"
         }
 
-        return listOf(xPart + yPart + "A", yPart + xPart + "A")
+        currentButton = targetButton
+        return result
     }
 
-    fun inputOptionsForOutput(output: String): List<String> {
-        var options: List<String> = listOf("")
-        var currentButton = 'A'
+    fun inputForOutput(output: String): Long {
+        return output.map { targetButton ->
+            inputLengthForButton(targetButton)
+        }.sum()
+    }
 
-        output.forEach { targetButton ->
-            options = options.flatMap { option ->
-                movesForButton(currentButton, targetButton).map { move ->
-                    option + move
-                }
-            }
-            currentButton = targetButton
-        }
-
-        return options
+    open fun inputLengthForButton(targetButton: Char): Long {
+        return movesForButton(targetButton).map { move ->
+            controlledBy?.inputLengthForButton(move) ?: 1
+        }.sum()
     }
 }
 
@@ -77,40 +78,94 @@ class KeypadRobot(controlledBy: ControlRobot? = null): Robot(controlledBy) {
 
 class ControlRobot(controlledBy: ControlRobot? = null): Robot(controlledBy) {
     override val keys: Map<Char, Coord> = mapOf(
-        '^' to Coord(1, 1),
-        '<' to Coord(0, 0),
-        'v' to Coord(1, 0),
-        '>' to Coord(2, 0),
-        'A' to Coord(2, 1),
-    )
+            '^' to Coord(1, 1),
+            '<' to Coord(0, 0),
+            'v' to Coord(1, 0),
+            '>' to Coord(2, 0),
+            'A' to Coord(2, 1),
+        )
+
+    private var cache: Cache<String, Long> = Cache()
+    private var thing: MutableMap<String, Long> = mutableMapOf()
+
+    override fun movesForButton(targetButton: Char): String {
+        return when (currentButton to targetButton) {
+            'A' to 'A' -> "A"
+            'A' to '^' -> "<A"
+            'A' to '<' -> "v<<A"
+            'A' to '>' -> "vA"
+            '^' to '^' -> "A"
+            '^' to '<' -> "v<A"
+            '^' to 'v' -> "vA"
+            '^' to 'A' -> ">A"
+            '<' to '^' -> ">^A"
+            '<' to '<' -> "A"
+            '<' to 'v' -> ">A"
+            '<' to '>' -> ">>A"
+            '<' to 'A' -> ">>^A"
+            'v' to '^' -> "^A"
+            'v' to '<' -> "<A"
+            'v' to 'v' -> "A"
+            'v' to '>' -> ">A"
+            '>' to '<' -> "<<A"
+            '>' to 'v' -> "<A"
+            '>' to '>' -> "A"
+            '>' to 'A' -> "^A"
+
+            // 189357384273226
+
+            'A' to 'v' -> "<vA" //
+            '^' to '>' -> "v>A" //
+            'v' to 'A' -> "^>A" //
+            '>' to '^' -> "<^A" //
+
+            else -> error("Invalid move")
+        }
+    }
+
+    override fun inputLengthForButton(targetButton: Char): Long {
+        val length = cache.getOrStore(cacheKey(targetButton)) {
+            super.inputLengthForButton(targetButton)
+        }
+        currentButton = targetButton
+        return length
+    }
+
+    fun cacheKey(targetButton: Char): String {
+        return "$this:$currentButton:$targetButton"
+    }
 }
 
-fun puzzle1(fileName: String): Int {
+fun puzzle1(fileName: String): Long {
     val lines = File(fileName).readLines()
 
-    val keypadRobot = KeypadRobot()
-    val controlRobot = ControlRobot()
-
     val result = lines.map { line ->
-        var candidates: List<String> = emptyList()
-        candidates = keypadRobot.inputOptionsForOutput(line)
+        val keypadRobot = KeypadRobot(buildControlRobotSequence(2))
+        val length = keypadRobot.inputForOutput(line)
 
-        2.times {
-            candidates = candidates.flatMap { candidate ->
-                controlRobot.inputOptionsForOutput(candidate)
-            }
-            val shortest = candidates.minBy { it.length }
-            println("$line: ${shortest.length} ($shortest)}")
-        }
-
-        val shortest = candidates.minBy { it.length }
-
-        line.substring(0, 3).toInt() * shortest.length
+        line.substring(0, 3).toLong() * length
     }.sum()
 
     return result
 }
 
-fun puzzle2(fileName: String): Int {
-    return -1
+fun puzzle2(fileName: String): Long {
+    val lines = File(fileName).readLines()
+
+    val result = lines.map { line ->
+        val keypadRobot = KeypadRobot(buildControlRobotSequence(25))
+        val length = keypadRobot.inputForOutput(line)
+
+        line.substring(0, 3).toLong() * length
+    }.sum()
+
+    return result
+}
+
+fun buildControlRobotSequence(depth: Int): ControlRobot {
+    var controlRobot = ControlRobot()
+    (depth - 1).times {
+        controlRobot = ControlRobot(controlRobot)
+    }
+    return controlRobot
 }
