@@ -14,12 +14,12 @@ fun main() {
     printTimedOutput("Puzzle 2     ") { puzzle2("input/day21.txt") }
 }
 
-abstract class Robot(var controlledBy: ControlRobot? = null) {
+abstract class Robot(private var controlledBy: ControlRobot? = null) {
     abstract val keys: Map<Char, Coord>
 
     var currentButton = 'A'
 
-    open fun movesForButton(targetButton: Char): String {
+    private fun movesForButton(targetButton: Char): String {
         val offset = keys[targetButton]!! - keys[currentButton]!!
 
         val xPart = (if (offset.x > 0) ">" else "<").repeat(abs(offset.x).toInt())
@@ -86,41 +86,8 @@ class ControlRobot(controlledBy: ControlRobot? = null): Robot(controlledBy) {
         )
 
     private var cache: Cache<String, Long> = Cache()
-    private var thing: MutableMap<String, Long> = mutableMapOf()
-
-    override fun movesForButton(targetButton: Char): String {
-        return when (currentButton to targetButton) {
-            'A' to 'A' -> "A"
-            'A' to '^' -> "<A"
-            'A' to '<' -> "v<<A"
-            'A' to '>' -> "vA"
-            '^' to '^' -> "A"
-            '^' to '<' -> "v<A"
-            '^' to 'v' -> "vA"
-            '^' to 'A' -> ">A"
-            '<' to '^' -> ">^A"
-            '<' to '<' -> "A"
-            '<' to 'v' -> ">A"
-            '<' to '>' -> ">>A"
-            '<' to 'A' -> ">>^A"
-            'v' to '^' -> "^A"
-            'v' to '<' -> "<A"
-            'v' to 'v' -> "A"
-            'v' to '>' -> ">A"
-            '>' to '<' -> "<<A"
-            '>' to 'v' -> "<A"
-            '>' to '>' -> "A"
-            '>' to 'A' -> "^A"
-
-            // 189357384273226
-
-            'A' to 'v' -> "<vA" //
-            '^' to '>' -> "v>A" //
-            'v' to 'A' -> "^>A" //
-            '>' to '^' -> "<^A" //
-
-            else -> error("Invalid move")
-        }
+    private fun cacheKey(targetButton: Char): String {
+        return "$this:$currentButton:$targetButton"
     }
 
     override fun inputLengthForButton(targetButton: Char): Long {
@@ -130,21 +97,17 @@ class ControlRobot(controlledBy: ControlRobot? = null): Robot(controlledBy) {
         currentButton = targetButton
         return length
     }
-
-    fun cacheKey(targetButton: Char): String {
-        return "$this:$currentButton:$targetButton"
-    }
 }
 
 fun puzzle1(fileName: String): Long {
     val lines = File(fileName).readLines()
 
-    val result = lines.map { line ->
+    val result = lines.sumOf { line ->
         val keypadRobot = KeypadRobot(buildControlRobotSequence(2))
         val length = keypadRobot.inputForOutput(line)
 
         line.substring(0, 3).toLong() * length
-    }.sum()
+    }
 
     return result
 }
@@ -152,12 +115,12 @@ fun puzzle1(fileName: String): Long {
 fun puzzle2(fileName: String): Long {
     val lines = File(fileName).readLines()
 
-    val result = lines.map { line ->
+    val result = lines.sumOf { line ->
         val keypadRobot = KeypadRobot(buildControlRobotSequence(25))
         val length = keypadRobot.inputForOutput(line)
 
         line.substring(0, 3).toLong() * length
-    }.sum()
+    }
 
     return result
 }
