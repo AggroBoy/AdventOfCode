@@ -1,4 +1,4 @@
-package twenty22.day01
+package twenty15.day0
 
 import util.printTimedOutput
 import java.io.File
