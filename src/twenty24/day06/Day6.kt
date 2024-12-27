@@ -22,10 +22,10 @@ data class Guard(
 }
 
 fun main() {
-    printTimedOutput("Puzzle 1 test") { puzzle1("input/day6-test.txt") }
-    printTimedOutput("Puzzle 1     ") { puzzle1("input/day6.txt") }
-    printTimedOutput("Puzzle 2 test") { puzzle2("input/day6-test.txt") }
-    printTimedOutput("Puzzle 2     ") { puzzle2("input/day6.txt") }
+    printTimedOutput("Puzzle 1 test") { puzzle1("input/2024/day6-test.txt") }
+    printTimedOutput("Puzzle 1     ") { puzzle1("input/2024/day6.txt") }
+    printTimedOutput("Puzzle 2 test") { puzzle2("input/2024/day6-test.txt") }
+    printTimedOutput("Puzzle 2     ") { puzzle2("input/2024/day6.txt") }
 }
 
 fun puzzle1(fileName: String): Int {

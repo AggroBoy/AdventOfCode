@@ -4,10 +4,10 @@ import util.printTimedOutput
 import java.io.File
 
 fun main() {
-    printTimedOutput("Puzzle 1 test") { puzzle1("input/day25-test.txt") }
-    printTimedOutput("Puzzle 1     ") { puzzle1("input/day25.txt") }
-    printTimedOutput("Puzzle 2 test") { puzzle2("input/day25-test.txt") }
-    printTimedOutput("Puzzle 2     ") { puzzle2("input/day25.txt") }
+    printTimedOutput("Puzzle 1 test") { puzzle1("input/2024/day25-test.txt") }
+    printTimedOutput("Puzzle 1     ") { puzzle1("input/2024/day25.txt") }
+    printTimedOutput("Puzzle 2 test") { puzzle2("input/2024/day25-test.txt") }
+    printTimedOutput("Puzzle 2     ") { puzzle2("input/2024/day25.txt") }
 }
 
 data class Key(

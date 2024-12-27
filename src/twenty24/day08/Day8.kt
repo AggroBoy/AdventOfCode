@@ -6,10 +6,10 @@ import java.io.File
 data class TownMap (val width: Int, val height: Int, val antenna: Map<Char, List<Coord>>)
 
 fun main() {
-    printTimedOutput("Puzzle 1 test") { puzzle1("input/day8-test.txt") }
-    printTimedOutput("Puzzle 1     ") { puzzle1("input/day8.txt") }
-    printTimedOutput("Puzzle 2 test") { puzzle2("input/day8-test.txt") }
-    printTimedOutput("Puzzle 2     ") { puzzle2("input/day8.txt") }
+    printTimedOutput("Puzzle 1 test") { puzzle1("input/2024/day8-test.txt") }
+    printTimedOutput("Puzzle 1     ") { puzzle1("input/2024/day8.txt") }
+    printTimedOutput("Puzzle 2 test") { puzzle2("input/2024/day8-test.txt") }
+    printTimedOutput("Puzzle 2     ") { puzzle2("input/2024/day8.txt") }
 }
 
 fun puzzle1(fileName: String): Int {

@@ -9,7 +9,7 @@ fun main() {
 }
 
 fun puzzle1(): Int {
-    return File("input/day3.txt").readLines().flatMap {
+    return File("input/2024/day3.txt").readLines().flatMap {
         Regex("""mul\((\d\d?\d?),(\d\d?\d?)\)""").findAll(it).map { match ->
             match.groupValues[1].toInt() * match.groupValues[2].toInt()
         }
@@ -17,7 +17,7 @@ fun puzzle1(): Int {
 }
 
 fun puzzle2(): Int {
-    val input = File("input/day3.txt")
+    val input = File("input/2024/day3.txt")
         .readLines()
         .joinToString()
         .replace(Regex("""don't\(\).*?(do\(\)|$)"""), "")

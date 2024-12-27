@@ -5,10 +5,10 @@ import java.io.File
 import kotlin.collections.MutableSet as MutableSet1
 
 fun main() {
-    printTimedOutput("Puzzle 1 test") { puzzle1("input/day14-test.txt", Coord(11, 7)) }
-    printTimedOutput("Puzzle 1     ") { puzzle1("input/day14.txt", Coord(101, 103)) }
+    printTimedOutput("Puzzle 1 test") { puzzle1("input/2024/day14-test.txt", Coord(11, 7)) }
+    printTimedOutput("Puzzle 1     ") { puzzle1("input/2024/day14.txt", Coord(101, 103)) }
     println("Running puzzle 2")
-    puzzle2("input/day14.txt", Coord(101, 103))
+    puzzle2("input/2024/day14.txt", Coord(101, 103))
 }
 
 data class Robot(val position: Coord, val velocity: Coord)

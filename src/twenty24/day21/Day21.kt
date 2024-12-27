@@ -8,10 +8,10 @@ import java.io.File
 import kotlin.math.abs
 
 fun main() {
-    printTimedOutput("Puzzle 1 test") { puzzle1("input/day21-test.txt") }
-    printTimedOutput("Puzzle 1     ") { puzzle1("input/day21.txt") }
-    printTimedOutput("Puzzle 2 test") { puzzle2("input/day21-test.txt") }
-    printTimedOutput("Puzzle 2     ") { puzzle2("input/day21.txt") }
+    printTimedOutput("Puzzle 1 test") { puzzle1("input/2024/day21-test.txt") }
+    printTimedOutput("Puzzle 1     ") { puzzle1("input/2024/day21.txt") }
+    printTimedOutput("Puzzle 2 test") { puzzle2("input/2024/day21-test.txt") }
+    printTimedOutput("Puzzle 2     ") { puzzle2("input/2024/day21.txt") }
 }
 
 abstract class Robot(private var controlledBy: ControlRobot? = null) {

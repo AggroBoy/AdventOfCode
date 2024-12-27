@@ -7,10 +7,10 @@ typealias GeoMap = List<List<Char>>
 fun GeoMap.get(coord: Coord): Char = try { this[coord.y.toInt()][coord.x.toInt()] } catch (e: IndexOutOfBoundsException) { ' ' }
 
 fun main() {
-    printTimedOutput("Puzzle 1 test") { puzzle1("input/day12-test.txt") }
-    printTimedOutput("Puzzle 1     ") { puzzle1("input/day12.txt") }
-    printTimedOutput("Puzzle 2 test") { puzzle2("input/day12-test.txt") }
-    printTimedOutput("Puzzle 2     ") { puzzle2("input/day12.txt") }
+    printTimedOutput("Puzzle 1 test") { puzzle1("input/2024/day12-test.txt") }
+    printTimedOutput("Puzzle 1     ") { puzzle1("input/2024/day12.txt") }
+    printTimedOutput("Puzzle 2 test") { puzzle2("input/2024/day12-test.txt") }
+    printTimedOutput("Puzzle 2     ") { puzzle2("input/2024/day12.txt") }
 }
 
 fun puzzle1(fileName: String): Int {

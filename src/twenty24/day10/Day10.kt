@@ -15,10 +15,10 @@ fun TopoMap.get(x: Long, y: Long): Int {
 }
 
 fun main() {
-    printTimedOutput("Puzzle 1 test") { puzzle1("input/day10-test.txt") }
-    printTimedOutput("Puzzle 1     ") { puzzle1("input/day10.txt") }
-    printTimedOutput("Puzzle 2 test") { puzzle2("input/day10-test.txt") }
-    printTimedOutput("Puzzle 2     ") { puzzle2("input/day10.txt") }
+    printTimedOutput("Puzzle 1 test") { puzzle1("input/2024/day10-test.txt") }
+    printTimedOutput("Puzzle 1     ") { puzzle1("input/2024/day10.txt") }
+    printTimedOutput("Puzzle 2 test") { puzzle2("input/2024/day10-test.txt") }
+    printTimedOutput("Puzzle 2     ") { puzzle2("input/2024/day10.txt") }
 }
 
 fun puzzle1(fileName: String): Int {

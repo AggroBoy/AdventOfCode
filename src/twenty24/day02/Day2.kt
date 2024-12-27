@@ -43,7 +43,7 @@ private fun isSafe2(report: List<Int>): Boolean {
 }
 
 private fun readReports(): List<List<Int>> {
-    val reports: List<List<Int>> = File("input/day2.txt").readLines().map {
+    val reports: List<List<Int>> = File("input/2024/day2.txt").readLines().map {
         it.split(" ").map { it.toInt() }
     }
     return reports

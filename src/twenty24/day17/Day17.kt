@@ -6,9 +6,9 @@ import kotlin.math.floor
 import kotlin.math.pow
 
 fun main() {
-    printTimedOutput("Puzzle 1 test") { puzzle1("input/day17-test.txt") }
-    printTimedOutput("Puzzle 1     ") { puzzle1("input/day17.txt") }
-    printTimedOutput("Puzzle 2     ") { puzzle2("input/day17.txt") }
+    printTimedOutput("Puzzle 1 test") { puzzle1("input/2024/day17-test.txt") }
+    printTimedOutput("Puzzle 1     ") { puzzle1("input/2024/day17.txt") }
+    printTimedOutput("Puzzle 2     ") { puzzle2("input/2024/day17.txt") }
 }
 
 enum class Opcode {

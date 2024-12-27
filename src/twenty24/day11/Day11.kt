@@ -4,10 +4,10 @@ import util.printTimedOutput
 import java.io.File
 
 fun main() {
-    printTimedOutput("Puzzle 1 test") { puzzle("input/day11-test.txt", 25) }
-    printTimedOutput("Puzzle 1     ") { puzzle("input/day11.txt", 25) }
-    printTimedOutput("Puzzle 2 test") { puzzle("input/day11-test.txt", 75) }
-    printTimedOutput("Puzzle 2     ") { puzzle("input/day11.txt", 75) }
+    printTimedOutput("Puzzle 1 test") { puzzle("input/2024/day11-test.txt", 25) }
+    printTimedOutput("Puzzle 1     ") { puzzle("input/2024/day11.txt", 25) }
+    printTimedOutput("Puzzle 2 test") { puzzle("input/2024/day11-test.txt", 75) }
+    printTimedOutput("Puzzle 2     ") { puzzle("input/2024/day11.txt", 75) }
 }
 
 val cache: MutableMap<Pair<Long, Int>, Long> = mutableMapOf()

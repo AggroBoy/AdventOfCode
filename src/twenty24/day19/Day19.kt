@@ -6,10 +6,10 @@ import java.io.File
 
 
 fun main() {
-    printTimedOutput("Puzzle 1 test") { puzzle1("input/day19-test.txt") }
-    printTimedOutput("Puzzle 1     ") { puzzle1("input/day19.txt") }
-    printTimedOutput("Puzzle 2 test") { puzzle2("input/day19-test.txt") }
-    printTimedOutput("Puzzle 2     ") { puzzle2("input/day19.txt") }
+    printTimedOutput("Puzzle 1 test") { puzzle1("input/2024/day19-test.txt") }
+    printTimedOutput("Puzzle 1     ") { puzzle1("input/2024/day19.txt") }
+    printTimedOutput("Puzzle 2 test") { puzzle2("input/2024/day19-test.txt") }
+    printTimedOutput("Puzzle 2     ") { puzzle2("input/2024/day19.txt") }
 }
 
 fun puzzle1(fileName: String): Int {

@@ -4,10 +4,10 @@ import util.printTimedOutput
 import java.io.File
 
 fun main() {
-    printTimedOutput("Puzzle 1 test") { puzzle1("input/day9-test.txt") }
-    printTimedOutput("Puzzle 1     ") { puzzle1("input/day9.txt") }
-    printTimedOutput("Puzzle 2 test") { puzzle2("input/day9-test.txt") }
-    printTimedOutput("Puzzle 2     ") { puzzle2("input/day9.txt") }
+    printTimedOutput("Puzzle 1 test") { puzzle1("input/2024/day9-test.txt") }
+    printTimedOutput("Puzzle 1     ") { puzzle1("input/2024/day9.txt") }
+    printTimedOutput("Puzzle 2 test") { puzzle2("input/2024/day9-test.txt") }
+    printTimedOutput("Puzzle 2     ") { puzzle2("input/2024/day9.txt") }
 }
 
 fun puzzle1(fileName: String): Long {

@@ -7,10 +7,10 @@ import java.io.File
 import kotlin.math.abs
 
 fun main() {
-    printTimedOutput("Puzzle 1 test") { puzzle1("input/day20-test.txt", 1) }
-    printTimedOutput("Puzzle 1     ") { puzzle1("input/day20.txt", 100) }
-    printTimedOutput("Puzzle 2 test") { puzzle2("input/day20-test.txt", 50) }
-    printTimedOutput("Puzzle 2     ") { puzzle2("input/day20.txt", 100) }
+    printTimedOutput("Puzzle 1 test") { puzzle1("input/2024/day20-test.txt", 1) }
+    printTimedOutput("Puzzle 1     ") { puzzle1("input/2024/day20.txt", 100) }
+    printTimedOutput("Puzzle 2 test") { puzzle2("input/2024/day20-test.txt", 50) }
+    printTimedOutput("Puzzle 2     ") { puzzle2("input/2024/day20.txt", 100) }
 }
 
 fun puzzle1(fileName: String, threshold: Int): Int = solvePuzzle(fileName, threshold, 2)

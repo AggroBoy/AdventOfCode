@@ -7,10 +7,10 @@ typealias Rule = Pair<Int, Int>
 typealias Manual = List<Int>
 
 fun main() {
-    printTimedOutput("Puzzle 1 test") { puzzle1("input/day5-test.txt") }
-    printTimedOutput("Puzzle 1     ") { puzzle1("input/day5.txt") }
-    printTimedOutput("Puzzle 2 test") { puzzle2("input/day5-test.txt") }
-    printTimedOutput("Puzzle 2     ") { puzzle2("input/day5.txt") }
+    printTimedOutput("Puzzle 1 test") { puzzle1("input/2024/day5-test.txt") }
+    printTimedOutput("Puzzle 1     ") { puzzle1("input/2024/day5.txt") }
+    printTimedOutput("Puzzle 2 test") { puzzle2("input/2024/day5-test.txt") }
+    printTimedOutput("Puzzle 2     ") { puzzle2("input/2024/day5.txt") }
 }
 
 fun puzzle1(s: String): Int {

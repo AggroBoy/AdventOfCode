@@ -34,7 +34,7 @@ private fun loadLists(): Pair<MutableList<Int>, MutableList<Int>> {
     val firstList = mutableListOf<Int>()
     val secondList = mutableListOf<Int>()
 
-    File("input/day1.txt").forEachLine {
+    File("input/2024/day1.txt").forEachLine {
         val (first, second) = it.split(Regex("\\s+")).map { it.toInt() }
         firstList.add(first)
         secondList.add(second)
