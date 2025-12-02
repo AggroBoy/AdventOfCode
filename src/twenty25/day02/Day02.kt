@@ -52,10 +52,8 @@ fun puzzle2(fileName: String): Long {
             if (
                 (1..numberString.length/2).filter {
                     numberString.length % it == 0
-                }.map { size ->
-                    numberString.chunked(size)
-                }.any { parts ->
-                    parts.toSet().size == 1
+                }.any { size ->
+                    numberString.chunked(size).toSet().size == 1
                 }
             )
                 numberString.toLong()
