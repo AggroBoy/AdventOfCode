@@ -49,14 +49,15 @@ fun puzzle2(fileName: String): Long {
         (startNumber..endNumber).map { number ->
             number.toString()
         }.mapNotNull { numberString ->
-            if (
+            val matchFound =
                 (1..numberString.length/2).filter {
                     numberString.length % it == 0
                 }.any { size ->
                     val parts = numberString.chunked(size)
                     parts.all { it == parts[0] }
                 }
-            )
+
+            if (matchFound)
                 numberString.toLong()
             else
                 null
