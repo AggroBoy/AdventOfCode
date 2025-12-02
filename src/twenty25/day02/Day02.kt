@@ -1,6 +1,5 @@
 package twenty25.day02
 
-import twenty22.day13.parseList
 import util.printTimedOutput
 import java.io.File
 
@@ -16,7 +15,7 @@ fun Int.isEven() = this % 2 == 0
 
 fun puzzle1(fileName: String): Long {
     val ranges = File(fileName).readLines()[0].split(",")
-    val answer = ranges.flatMap { range ->
+    val invalidIds = ranges.flatMap { range ->
         val start = range.substringBefore("-")
         val end = range.substringAfter("-")
 
@@ -35,12 +34,12 @@ fun puzzle1(fileName: String): Long {
             parts.joinToString("").toLong()
         }
     }
-    return answer.sum()
+    return invalidIds.sum()
 }
 
 fun puzzle2(fileName: String): Long {
     val ranges = File(fileName).readLines()[0].split(",")
-    val answer = ranges.flatMap { range ->
+    val invalidIds = ranges.flatMap { range ->
         val start = range.substringBefore("-")
         val end = range.substringAfter("-")
 
@@ -49,17 +48,20 @@ fun puzzle2(fileName: String): Long {
 
         (startNumber..endNumber).map { number ->
             number.toString()
-        }.flatMap { numberString ->
-            (1..numberString.length/2).filter {
-                numberString.length % it == 0
-            }.map { size ->
-                numberString.chunked(size)
-            }.filter{ parts ->
-                parts.toSet().size == 1
-            }.map { parts ->
-                parts.joinToString("").toLong()
-            }
+        }.mapNotNull { numberString ->
+            if (
+                (1..numberString.length/2).filter {
+                    numberString.length % it == 0
+                }.map { size ->
+                    numberString.chunked(size)
+                }.any { parts ->
+                    parts.toSet().size == 1
+                }
+            )
+                numberString.toLong()
+            else
+                null
         }
-    }.toSet()
-    return answer.sum()
+    }
+    return invalidIds.sum()
 }
