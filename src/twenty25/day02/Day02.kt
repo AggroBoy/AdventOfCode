@@ -23,12 +23,12 @@ fun puzzle1(fileName: String): Long {
         val startNumber = start.toLong()
         val endNumber = end.toLong()
 
-        (startNumber..endNumber).map { number ->
-            number.toString()
+        (startNumber..endNumber).map { id ->
+            id.toString()
         }.filter {
             it.length.isEven()
-        }.map { numberString ->
-            numberString.chunked(numberString.length/2)
+        }.map { idString ->
+            idString.chunked(idString.length/2)
         }.filter { parts ->
             parts[0] == parts[1]
         }.map { parts ->
@@ -49,19 +49,19 @@ fun puzzle2(fileName: String): Long {
         val startNumber = start.toLong()
         val endNumber = end.toLong()
 
-        (startNumber..endNumber).map { number ->
-            number.toString()
-        }.mapNotNull { numberString ->
-            val matchFound =
-                (1..numberString.length/2).filter {
-                    numberString.length % it == 0
+        (startNumber..endNumber).map { id ->
+            id.toString()
+        }.mapNotNull { idString ->
+            val isInvalid =
+                (1..idString.length/2).filter {
+                    idString.length % it == 0
                 }.any { size ->
-                    val parts = numberString.chunked(size)
+                    val parts = idString.chunked(size)
                     parts.all { it == parts[0] }
                 }
 
-            if (matchFound)
-                numberString.toLong()
+            if (isInvalid)
+                idString.toLong()
             else
                 null
         }
