@@ -29,7 +29,7 @@ fun puzzle1(fileName: String): Long {
         }.map { numberString ->
             numberString.chunked(numberString.length/2)
         }.filter { parts ->
-            parts.toSet().size == 1
+            parts[0] == parts[1]
         }.map { parts ->
             parts.joinToString("").toLong()
         }
@@ -53,7 +53,8 @@ fun puzzle2(fileName: String): Long {
                 (1..numberString.length/2).filter {
                     numberString.length % it == 0
                 }.any { size ->
-                    numberString.chunked(size).toSet().size == 1
+                    val parts = numberString.chunked(size)
+                    parts.all { it == parts[0] }
                 }
             )
                 numberString.toLong()
