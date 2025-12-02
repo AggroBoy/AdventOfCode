@@ -15,6 +15,7 @@ fun Int.isEven() = this % 2 == 0
 
 fun puzzle1(fileName: String): Long {
     val ranges = File(fileName).readLines()[0].split(",")
+
     val invalidIds = ranges.flatMap { range ->
         val start = range.substringBefore("-")
         val end = range.substringAfter("-")
@@ -34,11 +35,13 @@ fun puzzle1(fileName: String): Long {
             parts.joinToString("").toLong()
         }
     }
+
     return invalidIds.sum()
 }
 
 fun puzzle2(fileName: String): Long {
     val ranges = File(fileName).readLines()[0].split(",")
+
     val invalidIds = ranges.flatMap { range ->
         val start = range.substringBefore("-")
         val end = range.substringAfter("-")
@@ -63,5 +66,6 @@ fun puzzle2(fileName: String): Long {
                 null
         }
     }
+
     return invalidIds.sum()
 }
