@@ -25,7 +25,7 @@ fun puzzle1(fileName: String): Long {
 }
 
 fun twelveBatteryJoltageForBank(bank: List<Int>): Long {
-    var options = bank.toMutableList()
+    var options = bank
     val output = mutableListOf<Int>()
 
     while (output.size < 12) {
