@@ -27,7 +27,7 @@ fun puzzle2(fileName: String): Long {
     val lines = File(fileName).readLines()
 
     val freshIdRanges = lines.subList(0, lines.indexOf("")).map {
-        it.substringBefore('-').toLong() to it .substringAfter('-').toLong() + 1
+        it.substringBefore('-').toLong() to it.substringAfter('-').toLong() + 1
     }.sortedBy { it.first }
 
     val consolidatedRanges = mutableSetOf<Pair<Long, Long>>()
