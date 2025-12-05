@@ -11,7 +11,7 @@ fun main() {
     printTimedOutput("Puzzle 2     ") { puzzle2("input/2025/day04.txt") }
 }
 
-private fun loadPaperCoords(fileName: String): Set<Coord> {
+private fun loadPaperCoords(fileName: String): List<Coord> {
     val data = File(fileName).readLines()
 
     val paperCoords = data.flatMapIndexed { y, row ->
@@ -22,12 +22,12 @@ private fun loadPaperCoords(fileName: String): Set<Coord> {
                 null
             }
         }
-    }.filterNotNull().toSet()
+    }.filterNotNull()
 
     return paperCoords
 }
 
-fun candidateCanBeMoved(paperCoords: Set<Coord>, candidate: Coord): Boolean = paperCoords.count {
+fun candidateCanBeMoved(paperCoords: List<Coord>, candidate: Coord): Boolean = paperCoords.count {
     it != candidate &&
             it.x >= candidate.x - 1 && it.x <= candidate.x + 1 &&
             it.y >= candidate.y - 1 && it.y <= candidate.y + 1
@@ -44,11 +44,11 @@ fun puzzle1(fileName: String): Int {
 
 fun puzzle2(fileName: String): Int {
     val paperCoords = loadPaperCoords(fileName)
-    var currentCoords: Set<Coord>
+    var currentCoords: List<Coord>
     var newCoords = paperCoords
     do {
         currentCoords = newCoords
-        newCoords = currentCoords.filterNot { candidateCanBeMoved(currentCoords, it) }.toSet()
+        newCoords = currentCoords.filterNot { candidateCanBeMoved(currentCoords, it) }
     } while (currentCoords != newCoords)
 
     return paperCoords.size - newCoords.size
