@@ -2,6 +2,7 @@ package twenty25.day06
 
 import util.dropLast
 import util.printTimedOutput
+import util.split
 import java.io.File
 import kotlin.collections.reduce
 
@@ -29,31 +30,22 @@ fun puzzle1(fileName: String): Long {
 }
 
 fun puzzle2(fileName: String): Long {
-    // adding a space to the end avoids needing special case processing for the last column later
-    val lines = File(fileName).readLines().map { "$it " }
-    val problems = mutableListOf<List<String>>()
+    val lines = File(fileName).readLines()
 
-    var problemStart = 0
-    lines[1].indices.forEach { i ->
-        if (lines.all {it[i] == ' '}) {
-            problems.add( lines.map { it.substring(problemStart, i)} )
-            problemStart = i+1
-        }
-    }
+    val pivotedProblems = (0..lines[0].length-1).map { i ->
+        lines.dropLast().map { it[i] }.joinToString("").trim()
+    }.split("")
 
-    return problems.sumOf { problem ->
-        val numbers = problem[0].indices.map { i ->
-            problem.dropLast().map { it[i] }
-                .joinToString("")
-                .trim()
-                .toLong()
-        }
-        val operation = problem.last().trim()
+    val operations = lines.last().filter { it != ' ' }
+
+    return pivotedProblems.mapIndexed { i, problem ->
+        val numbers = problem.map { it.toLong() }
+        val operation = operations[i]
 
         when (operation) {
-            "+" -> numbers.reduce { acc, num -> acc + num }
-            "*" -> numbers.reduce { acc, num -> acc * num }
+            '+' -> numbers.reduce { acc, num -> acc + num }
+            '*' -> numbers.reduce { acc, num -> acc * num }
             else -> throw Exception("Nope!")
         }
-    }
+    }.sum()
 }
