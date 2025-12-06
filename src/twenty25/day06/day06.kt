@@ -31,24 +31,24 @@ fun puzzle1(fileName: String): Long {
 fun puzzle2(fileName: String): Long {
     // adding a space to the end avoids needing special case processing for the last column later
     val lines = File(fileName).readLines().map { "$it " }
-    val operations = mutableListOf<List<String>>()
+    val problems = mutableListOf<List<String>>()
 
-    var operationStart = 0
+    var problemStart = 0
     lines[1].indices.forEach { i ->
         if (lines.all {it[i] == ' '}) {
-            operations.add( lines.map { it.substring(operationStart, i)} )
-            operationStart = i+1
+            problems.add( lines.map { it.substring(problemStart, i)} )
+            problemStart = i+1
         }
     }
 
-    return operations.sumOf { operation ->
-        val numbers = operation[0].indices.map { i ->
-            operation.dropLast().map { it[i] }
+    return problems.sumOf { problem ->
+        val numbers = problem[0].indices.map { i ->
+            problem.dropLast().map { it[i] }
                 .joinToString("")
                 .trim()
                 .toLong()
         }
-        val operation = operation.last().trim()
+        val operation = problem.last().trim()
 
         when (operation) {
             "+" -> numbers.reduce { acc, num -> acc + num }
