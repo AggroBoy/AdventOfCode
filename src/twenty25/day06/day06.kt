@@ -1,5 +1,6 @@
 package twenty25.day06
 
+import util.dropLast
 import util.printTimedOutput
 import java.io.File
 import kotlin.collections.reduce
@@ -17,7 +18,7 @@ fun puzzle1(fileName: String): Long {
     }
 
     return lines[1].indices.sumOf { i ->
-        val numbers = lines.subList(0, lines.size - 1).map { it[i].toLong() }
+        val numbers = lines.dropLast().map { it[i].toLong() }
         val operation = lines.last()[i]
         when (operation) {
             "+" -> numbers.reduce { acc, num -> acc + num }
@@ -30,24 +31,24 @@ fun puzzle1(fileName: String): Long {
 fun puzzle2(fileName: String): Long {
     // adding a space to the end avoids needing special case processing for the last column later
     val lines = File(fileName).readLines().map { "$it " }
-    val columns = mutableListOf<List<String>>()
+    val operations = mutableListOf<List<String>>()
 
-    var columnStart = 0
+    var operationStart = 0
     lines[1].indices.forEach { i ->
         if (lines.all {it[i] == ' '}) {
-            columns.add( lines.map { it.substring(columnStart, i)} )
-            columnStart = i+1
+            operations.add( lines.map { it.substring(operationStart, i)} )
+            operationStart = i+1
         }
     }
 
-    return columns.sumOf { column ->
-        val numbers = column[0].indices.map { i ->
-            column.subList(0, column.size-1).map { it[i] }
+    return operations.sumOf { operation ->
+        val numbers = operation[0].indices.map { i ->
+            operation.dropLast().map { it[i] }
                 .joinToString("")
                 .trim()
                 .toLong()
         }
-        val operation = column.last().trim()
+        val operation = operation.last().trim()
 
         when (operation) {
             "+" -> numbers.reduce { acc, num -> acc + num }

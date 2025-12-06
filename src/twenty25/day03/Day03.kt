@@ -1,5 +1,6 @@
 package twenty25.day03
 
+import util.dropLast
 import util.printTimedOutput
 import java.io.File
 
@@ -18,7 +19,7 @@ fun puzzle1(fileName: String): Long {
     }
 
     return banks.sumOf { bank ->
-        val highest = bank.subList(0, bank.size - 1).sortedDescending()[0]
+        val highest = bank.dropLast().sortedDescending()[0]
         val secondHighest = bank.subList(bank.indexOf(highest) + 1, bank.size).sortedDescending()[0]
         (highest * 10L) + secondHighest
     }

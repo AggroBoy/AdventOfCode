@@ -14,3 +14,5 @@ fun <T>printTimedOutput(title: String, lambda: () -> T) {
 fun Int.times(lambda: () -> Unit) {
     (0 until this).forEach { lambda() }
 }
+
+fun <T>List<T>.dropLast(): List<T> = this.dropLast(1)
