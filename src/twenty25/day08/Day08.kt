@@ -18,7 +18,7 @@ class Playground(fileName: String) {
         .map { Coord3d(it[0].toLong(), it[1].toLong(), it[2].toLong()) }
     val pairDistances = boxes.flatMap { one ->
         boxes.filter { it != one }.map { one to it }
-    }.associate { it.first.disatanceFrom(it.second) to it}
+    }.associateBy { it.first.disatanceFrom(it.second) }
     val sortedDistances = pairDistances.keys.sorted()
     val circuits = boxes.map { mutableListOf(it) }.toMutableList()
 }
