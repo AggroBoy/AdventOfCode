@@ -50,15 +50,13 @@ fun puzzle2(fileName: String):Long {
         }.sum()
     }
 
-    val svrToDac = walkNodes("svr", "dac") ?: throw Exception("no answer")
-    val dacToFft = walkNodes("dac", "fft") ?: throw Exception("no answer")
-    val fftToOut = walkNodes("fft", "out") ?: throw Exception("no answer")
-    val routeOne = svrToDac * dacToFft * fftToOut
+    val dacFirst = walkNodes("svr", "dac")!!  *
+            walkNodes("dac", "fft")!! *
+            walkNodes("fft", "out")!!
 
-    val svrToFft = walkNodes("svr", "fft") ?: throw Exception("no answer")
-    val fftToDac = walkNodes("fft", "dac") ?: throw Exception("no answer")
-    val dacToOut = walkNodes("dac", "out") ?: throw Exception("no answer")
-    val routeTwo = svrToFft * fftToDac * dacToOut
+    val fftFirst = walkNodes("svr", "fft")!! *
+            walkNodes("fft", "dac")!! *
+            walkNodes("dac", "out")!!
 
-    return routeOne + routeTwo
+    return dacFirst + fftFirst
 }
