@@ -84,8 +84,8 @@ fun findPermuatationThatFits(
     region: Region,
 ): Pair<Coord, Shape>? {
     val map = region.map
-    for (y in (0..region.size.y)) {
-        for (x in (0..region.size.x)) {
+    for (y in (0..region.size.y - 2)) {
+        for (x in (0..region.size.x - 2)) {
             val origin = Coord(x, y)
             shape.find { it.none { map.contains(origin + it) } }?.let { return Coord(x, y) to it }
         }
