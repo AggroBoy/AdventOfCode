@@ -7,6 +7,7 @@ data class Coord(val x: Long, val y: Long) {
     constructor(x: Int, y: Int) : this(x.toLong(), y.toLong())
 
     operator fun plus(other: Coord) = Coord(this.x + other.x, this.y + other.y)
+    operator fun plus(direction: ScreenDirection): Coord = this + direction.coord
     operator fun plus(direction: Direction): Coord = this + direction.coord
     operator fun minus(other: Coord) = Coord(this.x - other.x, this.y - other.y)
 

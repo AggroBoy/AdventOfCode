@@ -49,7 +49,7 @@ class Warehouse(lines: List<String>, val itemWidth: Int = 1) {
         boxes = tempBoxes.toList()
     }
 
-    fun moveRobot(direction: Direction) {
+    fun moveRobot(direction: ScreenDirection) {
         val newLocation = robotLocation + direction.coord
 
         if (canPushInto(newLocation, direction)) {
@@ -58,14 +58,14 @@ class Warehouse(lines: List<String>, val itemWidth: Int = 1) {
         }
     }
 
-    fun canPushInto(location: Coord, direction: Direction, pushingBox: Box? = null): Boolean {
+    fun canPushInto(location: Coord, direction: ScreenDirection, pushingBox: Box? = null): Boolean {
         if (walls.contains(location)) return false
         val box = boxes.firstOrNull() { it.locations.contains(location) && it != pushingBox } ?: return true
 
         return (box.locations.all { canPushInto(it + direction.coord, direction, box) })
     }
 
-    fun doPushInto(location: Coord, direction: Direction, pushingBox: Box? = null) {
+    fun doPushInto(location: Coord, direction: ScreenDirection, pushingBox: Box? = null) {
         val box = boxes.firstOrNull { it.locations.contains(location) && it != pushingBox} ?: return
         box.locations = box.locations.map {
             val newLocation = it + direction.coord
@@ -119,10 +119,10 @@ fun puzzle2(fileName: String): Long {
 private fun processInstructions(instructions: List<Char>, warehouse: Warehouse) {
     instructions.forEach {
         when (it) {
-            '^' -> warehouse.moveRobot(Direction.UP)
-            'v' -> warehouse.moveRobot(Direction.DOWN)
-            '<' -> warehouse.moveRobot(Direction.LEFT)
-            '>' -> warehouse.moveRobot(Direction.RIGHT)
+            '^' -> warehouse.moveRobot(ScreenDirection.UP)
+            'v' -> warehouse.moveRobot(ScreenDirection.DOWN)
+            '<' -> warehouse.moveRobot(ScreenDirection.LEFT)
+            '>' -> warehouse.moveRobot(ScreenDirection.RIGHT)
         }
     }
 }

@@ -1,6 +1,6 @@
 package twenty24.day16
 
-import util.Direction
+import util.ScreenDirection
 import util.Coord
 import util.printTimedOutput
 import java.io.File
@@ -12,7 +12,7 @@ fun main() {
     printTimedOutput("Puzzle 2     ") { puzzle2("input/2024/day16.txt") }
 }
 
-data class Reindeer(val location: Coord, val facing: Direction)
+data class Reindeer(val location: Coord, val facing: ScreenDirection)
 enum class LocationType { WALL, OPEN, START, END}
 
 var bestScoreSoFar = Long.MAX_VALUE
@@ -25,7 +25,7 @@ fun Maze.get(location: Coord) = this[location.y.toInt()][location.x.toInt()]
 
 fun puzzle1(fileName: String): Long {
     val (maze, startPosition) = loadMazeAndStartPosition(fileName)
-    val reindeer = Reindeer(startPosition, Direction.RIGHT)
+    val reindeer = Reindeer(startPosition, ScreenDirection.RIGHT)
 
     bestScoreSoFar = Long.MAX_VALUE
     bestScoreForReindeerState = mutableMapOf()
@@ -35,7 +35,7 @@ fun puzzle1(fileName: String): Long {
 
 fun puzzle2(fileName: String): Int {
     val (maze, startPosition) = loadMazeAndStartPosition(fileName)
-    val reindeer = Reindeer(startPosition, Direction.RIGHT)
+    val reindeer = Reindeer(startPosition, ScreenDirection.RIGHT)
 
     bestScoreSoFar = Long.MAX_VALUE
     bestScoreForReindeerState = mutableMapOf()

@@ -1,7 +1,7 @@
 package twenty24.day20
 
 import util.Coord
-import util.Direction
+import util.ScreenDirection
 import util.printTimedOutput
 import java.io.File
 import kotlin.math.abs
@@ -29,10 +29,10 @@ fun mapRouteTimings(walls: MutableSet<Coord>, startLocation: Coord, targetLocati
         }
 
         currentLocation = listOf(
-            Direction.UP,
-            Direction.DOWN,
-            Direction.LEFT,
-            Direction.RIGHT
+            ScreenDirection.UP,
+            ScreenDirection.DOWN,
+            ScreenDirection.LEFT,
+            ScreenDirection.RIGHT
         ).map {
             currentLocation + it.coord
         }.filter {
