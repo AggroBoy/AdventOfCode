@@ -1,5 +1,6 @@
 package twenty25.day02
 
+import util.isEven
 import util.printTimedOutput
 import java.io.File
 
@@ -9,9 +10,6 @@ fun main() {
     printTimedOutput("Puzzle 2 test") { puzzle2("input/2025/day02-test.txt") }
     printTimedOutput("Puzzle 2     ") { puzzle2("input/2025/day02.txt") }
 }
-
-fun Int.isOdd() = this % 2 != 0
-fun Int.isEven() = this % 2 == 0
 
 fun puzzle1(fileName: String): Long {
     val ranges = File(fileName).readLines()[0].split(",")

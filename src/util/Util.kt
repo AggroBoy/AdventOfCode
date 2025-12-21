@@ -11,6 +11,9 @@ fun <T>printTimedOutput(title: String, lambda: () -> T) {
     println("%-20s %10s".format("$title : $result", "(${timeStamp.elapsedNow().inWholeMilliseconds}ms)"))
 }
 
+fun Int.isOdd() = this % 2 != 0
+fun Int.isEven() = this % 2 == 0
+
 fun Int.times(lambda: () -> Unit) {
     (0 until this).forEach { lambda() }
 }

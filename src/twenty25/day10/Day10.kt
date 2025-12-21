@@ -1,10 +1,8 @@
 package twenty25.day10
 
-import twenty25.day02.isEven
-import twenty25.day02.isOdd
+import util.isEven
 import util.Cache
 import util.printTimedOutput
-import java.awt.Button
 import java.io.File
 import kotlin.collections.map
 
