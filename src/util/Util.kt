@@ -5,10 +5,10 @@ import kotlin.time.TimeSource
 
 
 @OptIn(ExperimentalTime::class)
-fun <T>printTimedOutput(title: String, lambda: () -> T) {
+fun <T>printTimedOutput(title: String, outputWidth: Int = 30, lambda: () -> T) {
     val timeStamp = TimeSource.Monotonic.markNow()
     val result = lambda()
-    println("%-20s %10s".format("$title : $result", "(${timeStamp.elapsedNow().inWholeMilliseconds}ms)"))
+    println("%-${outputWidth}s %10s".format("$title : $result", "(${timeStamp.elapsedNow().inWholeMilliseconds}ms)"))
 }
 
 fun Int.isOdd() = this % 2 != 0
