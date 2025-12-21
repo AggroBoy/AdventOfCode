@@ -25,12 +25,7 @@ fun puzzle1(fileName: String): Int {
     visited.add(currentLocation)
 
     commands.forEach { command ->
-        currentLocation = when(command) {
-            Direction.UP -> currentLocation + Coord(0, -1)
-            Direction.DOWN -> currentLocation + Coord(0, 1)
-            Direction.LEFT -> currentLocation + Coord(-1, 0)
-            Direction.RIGHT -> currentLocation + Coord(1, 0)
-        }
+        currentLocation += command
         visited.add(currentLocation)
     }
 
@@ -54,21 +49,11 @@ fun puzzle2(fileName: String): Int {
 
     commands.chunked(2).forEach { command ->
 
-        currentLocationSanta = when(command.first()) {
-            Direction.UP -> currentLocationSanta + Coord(0, -1)
-            Direction.DOWN -> currentLocationSanta + Coord(0, 1)
-            Direction.LEFT -> currentLocationSanta + Coord(-1, 0)
-            Direction.RIGHT -> currentLocationSanta + Coord(1, 0)
-        }
+        currentLocationSanta += command.first()
         visited.add(currentLocationSanta)
 
         if (command.size == 2) {
-            currentLocationRobot = when(command.last()) {
-                Direction.UP -> currentLocationRobot + Coord(0, -1)
-                Direction.DOWN -> currentLocationRobot + Coord(0, 1)
-                Direction.LEFT -> currentLocationRobot + Coord(-1, 0)
-                Direction.RIGHT -> currentLocationRobot + Coord(1, 0)
-            }
+            currentLocationRobot += command.last()
             visited.add(currentLocationRobot)
 
         }
