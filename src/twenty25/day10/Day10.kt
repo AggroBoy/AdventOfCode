@@ -1,14 +1,17 @@
 package twenty25.day10
 
+import twenty25.day02.isEven
+import twenty25.day02.isOdd
 import util.Cache
 import util.printTimedOutput
+import java.awt.Button
 import java.io.File
-import kotlin.math.max
+import kotlin.collections.map
 
 fun main() {
 //    printTimedOutput("Puzzle 1 test") { puzzle1("input/2025/day10-test.txt") }
 //    printTimedOutput("Puzzle 1     ") { puzzle1("input/2025/day10.txt") }
-//    printTimedOutput("Puzzle 2 test") { puzzle2("input/2025/day10-test.txt") }
+    printTimedOutput("Puzzle 2 test") { puzzle2("input/2025/day10-test.txt") }
     printTimedOutput("Puzzle 2     ") { puzzle2("input/2025/day10.txt") }
 }
 
@@ -18,8 +21,7 @@ data class Machine (
     val buttons: List<Int>,
     val buttonsInts: List<List<Int>>
 ) {
-    val buttonPressCache = Cache<List<Int>, List<List<Int>>?>()
-    var minPressesSoFar = Int.MAX_VALUE
+    val buttonPressCache = Cache<List<Int?>, Int?>()
 
     fun buttonPressesToTargetLights(): List<Int> {
         // What combination of buttons XORed together gives the target
@@ -31,41 +33,43 @@ data class Machine (
         throw Exception("Not found")
     }
 
-    fun walkButtonPressesToTargetJoltage(currentJoltages: List<Int>): List<List<Int>>?  {
-        if (currentJoltages.filterIndexed { i, joltage ->
-                joltage > joltageTargets[i]
-            }.isNotEmpty()// || presses.size > minPressesSoFar
-        )
-            return null
+    fun walkButtonPressesToTargetJoltage(currentJoltages: List<Int>): Int?  {
+        if ( currentJoltages.all { it == 0 } ) return 0
 
-        if (currentJoltages == joltageTargets) {
-            //minPressesSoFar = presses.size
-            println("solutionFound!")
-            return listOf()
-        }
+        try {
+            val options = mutableListOf<List<List<Int>>>()
+            if (currentJoltages.all { it.isEven() }) options.add(emptyList())
 
-        val currentfocus = joltageTargets.mapIndexedNotNull { i, target ->
-            if (currentJoltages[i] != target)
-                i
-            else
-                null
-        }.maxBy { joltageTargets[it] }
-
-        return buttonsInts.filter { it.contains(currentfocus) }.map { button ->
-            //val newPresses = 1
-            val newPresses = currentJoltages.mapIndexedNotNull { i, _ ->
-                if (button.contains(i)) (joltageTargets[i] - currentJoltages[i]) - joltageTargets.size
-//                if (button.contains(i)) (joltageTargets[i] - currentJoltages[i]) - 5
-                else null
-            }.minOf { max(it, 1) }
-
-            List(newPresses) { button } to currentJoltages.mapIndexed { i, joltage ->
-                if (button.contains(i)) joltage + newPresses
-                else joltage
+            val joltageToPresses = mutableMapOf<List<Int>, List<List<Int>>>()
+            buttonsInts.permutations().forEach { buttonSet ->
+                val newJoltages = currentJoltages.mapIndexed { i, joltage ->
+                    joltage - buttonSet.count { it.contains(i) }
+                }
+                if (newJoltages.all { it.isEven() && it >= 0 } ) {
+                    if (joltageToPresses.getOrPut(newJoltages, { buttonSet }).size > buttonSet.size)
+                        joltageToPresses[newJoltages] = buttonSet
+                }
             }
-        }.mapNotNull { (newPresses, newJoltages) ->
-            buttonPressCache.getOrStore(newJoltages) { walkButtonPressesToTargetJoltage(newJoltages) }?.let { it + newPresses }
-        }.minByOrNull { it.size }
+            options.addAll( joltageToPresses.toList()
+                .map { it.second }
+            )
+
+            if (options.isEmpty())
+                return null
+
+            return options.mapNotNull { pressed ->
+                val newJoltages = currentJoltages.mapIndexed { i, joltage ->
+                    joltage - pressed.count { it.contains(i) }
+                }
+
+                val halvedJoltages = newJoltages.map { it / 2 }
+                val walkResult = buttonPressCache.getOrStore(halvedJoltages) { walkButtonPressesToTargetJoltage(halvedJoltages) }
+                if (walkResult != null) pressed.size + (2 * walkResult)
+                else null
+            }.min()
+        } catch (e: NoSuchElementException) {
+            return null
+        }
     }
 
 
@@ -86,7 +90,7 @@ data class Machine (
             val buttonsInts = buttonStr
                 .split(" ")
                 .map { it.substringAfter('(').substringBefore(')') }
-                .map { it.split(',').map{ it.toInt() } }.sortedByDescending { it.size }
+                .map { it.split(',').map{ it.toInt() } }.sortedBy { it.size }
             val buttonsBitmap = buttonsInts
                 .map {
                     var value = 0
@@ -131,11 +135,7 @@ fun puzzle2(fileName: String): Int {
     val machines = File(fileName).readLines().map { Machine.load(it) }
 
     val a = machines.map {
-        val answer = it.walkButtonPressesToTargetJoltage(it.joltageTargets.map { 0 })
-        if (answer != null)
-            answer
-        else
-            throw IllegalArgumentException("Unsolvable machine!")
+        it.walkButtonPressesToTargetJoltage(it.joltageTargets.toMutableList() ) ?: throw Exception("Unworkable machine: $it")
     }
-    return a.sumOf { it.size }
+        return a.sum()
 }
