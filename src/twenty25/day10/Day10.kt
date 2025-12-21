@@ -9,8 +9,8 @@ import java.io.File
 import kotlin.collections.map
 
 fun main() {
-//    printTimedOutput("Puzzle 1 test") { puzzle1("input/2025/day10-test.txt") }
-//    printTimedOutput("Puzzle 1     ") { puzzle1("input/2025/day10.txt") }
+    printTimedOutput("Puzzle 1 test") { puzzle1("input/2025/day10-test.txt") }
+    printTimedOutput("Puzzle 1     ") { puzzle1("input/2025/day10.txt") }
     printTimedOutput("Puzzle 2 test") { puzzle2("input/2025/day10-test.txt") }
     printTimedOutput("Puzzle 2     ") { puzzle2("input/2025/day10.txt") }
 }
