@@ -2,6 +2,7 @@ package twenty25.day10
 
 import util.isEven
 import util.Cache
+import util.permutations
 import util.printTimedOutput
 import java.io.File
 import kotlin.collections.map
@@ -102,23 +103,6 @@ data class Machine (
             return Machine(target, joltageTargets, buttonsBitmap, buttonsInts)
         }
     }
-}
-
-private fun <T>List<T>.permutations(): List<List<T>> {
-    var allBits = 0
-    (0..this.size-1).forEach { allBits = (allBits shl 1) or 1 }
-
-    val result = mutableListOf<List<T>>()
-
-    (1..allBits).forEach { bitMap ->
-        val bitString = bitMap.toUInt().toString(2).padStart(this.size, '0')
-        val permutation = this.filterIndexed { i, _ ->
-            bitString[i] == '1'
-        }
-        result.add(permutation)
-    }
-
-    return result.sortedBy { it.size }
 }
 
 fun puzzle1(fileName: String): Int {
